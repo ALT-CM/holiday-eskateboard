@@ -1,11 +1,7 @@
-
+--Load QB-Core
 QBCore = exports['qb-core']:GetCoreObject()
 
-RegisterServerEvent("shareImOnSkate")
-AddEventHandler("shareImOnSkate", function() 
-    TriggerClientEvent("shareHeIsOnSkate", -1, source)
-end)
-
+--Useable Item
 QBCore.Functions.CreateUseableItem('skateboard', function(source, item)
     local Player = QBCore.Functions.GetPlayer(source)
 	if Player.Functions.GetItemBySlot(item.slot) ~= nil then
@@ -14,6 +10,7 @@ QBCore.Functions.CreateUseableItem('skateboard', function(source, item)
     end
 end)
 
+--Add item back after picking it up
 RegisterServerEvent('skateboard:pick')
 AddEventHandler('skateboard:pick', function(item, amount)	
 	local Player = QBCore.Functions.GetPlayer(source)

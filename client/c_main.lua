@@ -1,3 +1,4 @@
+--Load QB-Core
 local QBCore = exports['qb-core']:GetCoreObject()
 
 local RCCar = {}
@@ -150,7 +151,6 @@ RCCar.Spawn = function()
 	SetEntityNoCollisionEntity(RCCar.Entity, player, false) -- disable collision between the player and the rc
 	SetEntityCollision(RCCar.Entity, true, true)
 	SetEntityVisible(RCCar.Entity, false)
-	--SetAllVehiclesSpawn(RCCar.Entity, true, true, true, true)
 	AttachEntityToEntity(RCCar.Skate, RCCar.Entity, GetPedBoneIndex(PlayerPedId(), 28422), 0.0, 0.0, -0.60, 0.0, 0.0, 90.0, false, true, true, true, 1, true)
 	RCCar.Driver = CreatePed(12	, 68070371, spawnCoords, spawnHeading, true, true)
 	-- Driver properties
@@ -159,7 +159,6 @@ RCCar.Spawn = function()
 	SetEntityVisible(RCCar.Driver, false)
 	FreezeEntityPosition(RCCar.Driver, true)
 	TaskWarpPedIntoVehicle(RCCar.Driver, RCCar.Entity, -1)
-	--SetPedAlertness(RCCar.Driver, 0)
 	while not IsPedInVehicle(RCCar.Driver, RCCar.Entity) do
 		Citizen.Wait(0)
 	end
@@ -199,14 +198,14 @@ RCCar.Attach = function(param)
 		return
 	end
 	if param == "place" then
-		-- Place longboard
+		-- Place item
 		AttachEntityToEntity(RCCar.Entity, PlayerPedId(), GetPedBoneIndex(PlayerPedId(),  28422), -0.1, 0.0, -0.2, 70.0, 0.0, 270.0, 1, 1, 0, 0, 2, 1)
 		TaskPlayAnim(PlayerPedId(), "pickup_object", "pickup_low", 8.0, -8.0, -1, 0, 0, false, false, false)
 		Citizen.Wait(800)
 		DetachEntity(RCCar.Entity, false, true)
 		PlaceObjectOnGroundProperly(RCCar.Entity)
 	elseif param == "pick" then
-		-- Pick longboard
+		-- Pick item
 		Citizen.Wait(100)
 		TaskPlayAnim(PlayerPedId(), "pickup_object", "pickup_low", 8.0, -8.0, -1, 0, 0, false, false, false)
 		Citizen.Wait(600)
@@ -273,19 +272,3 @@ RCCar.AttachPlayer = function(toggle)
 		StopAnimTask(player, "move_strafe@stealth", "idle", 1.0)	
 	end	
 end
-
-RegisterNetEvent("shareHeIsOnSkate")
-AddEventHandler("shareHeIsOnSkate", function(id)
-	local player = GetPlayerFromServerId(id)
-	local vehicle = GetEntityAttachedTo(GetPlayerPed(player))
-	if not vehiclesMuted[vehicle] then
-		Citizen.CreateThread(function() 
-			vehiclesMuted[vehicle] = true
-			while vehicle do
-				Citizen.Wait(10)
-				ForceVehicleEngineAudio(vehicle, 0)
-			end
-			table.remove(vehiclesMuted, vehicle)
-		end)
-	end	
-end)
